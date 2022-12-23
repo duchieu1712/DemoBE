@@ -1,0 +1,37 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// Nơi tạo bảng và quan hệ bảng
+
+// Giúp tạo ra model để thao tác CRUD, select... thực thi truy vấn trong db 
+
+//  npx prisma push: Chạy và tạo bảng, db [ko có file migration hoặc teamlead ko yêu cầu tạo bảng thông qa migration]
+//  npx prisma migrate [dev,deployment]: Chạy và tạo bảng nhưng thực thi lệnh tạo bảng ở folder migrations mặc định sẽ chạy file migrate mới nhất , khi có thay đổi model
+
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Nơi khai báo đường dẫn db server và db cần sử dụng
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// Nơi tạo bảng bằng code
+model User {
+  id Int @id @default(autoincrement()) //@id: primary key
+  username String @unique
+  password String
+  phone_number String
+  created_date DateTime @default(now())
+  role_id Int
+  role Role @relation(fields: [role_id], references: [id])
+}
+
+model Role {
+  id Int @id @default(autoincrement())
+  role_name String @unique
+  created_date DateTime @default(now())
+  user User[]
+}

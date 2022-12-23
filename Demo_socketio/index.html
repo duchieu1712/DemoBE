@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input id="txt-chat" />
+    <button id="btn-click">Click</button>
+    <p id="txt-data"></p>
+    <script src="https://cdn.socket.io/4.5.0/socket.io.min.js" integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k" crossorigin="anonymous"></script>
+    <script>
+        const socket = io("ws://localhost:8080")
+
+        // socket.on("get-data",(data)=> {
+        //     console.log(data);
+        // })
+        // socket.emit("client-data", "123")
+        document.querySelector("#btn-click").onclick = function() {
+            let data = document.querySelector("#txt-chat").value;
+            socket.emit("client-data", data)
+        }
+        // socket.on("server-data",(data) => {
+        //     document.querySelector("#txt-data").innerHTML += data + "<br/>"
+        // })
+        socket.on("client-connect", (name) => {
+            document.querySelector("#txt-data").innerHTML += `${name} + connect <br/>`
+        })
+        socket.on("client-disconnect",(name)=> {
+            document.querySelector("#txt-data").innerHTML += `${name} + disconnect <br/>`
+        })
+        socket.on("server-data",(data) => {
+            document.querySelector("#txt-data").innerHTML += data + "<br/>"
+        })
+    </script>
+</body>
+</html>
